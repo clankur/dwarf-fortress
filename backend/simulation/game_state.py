@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
+from backend.simulation.creature_system import CreatureSystem
 from backend.world.grid import WorldGrid
 
 logger = logging.getLogger(__name__)
@@ -15,6 +16,7 @@ class GameState:
 
     def __init__(self, world: WorldGrid) -> None:
         self.world = world
+        self.creature_system = CreatureSystem()
         self.systems: list[Any] = []
         self._changed_tiles: set[tuple[int, int, int]] = set()
 
@@ -30,5 +32,8 @@ class GameState:
         return changed
 
     async def tick(self, tick_number: int) -> None:
+        # Creature system always ticks first
+        await self.creature_system.tick(self, tick_number)
+
         for system in self.systems:
             await system.tick(self, tick_number)

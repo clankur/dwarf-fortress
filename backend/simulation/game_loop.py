@@ -68,3 +68,17 @@ class GameLoop:
     async def _tick(self) -> None:
         self.tick_count += 1
         await self.game_state.tick(self.tick_count)
+
+        # Broadcast state deltas to connected clients
+        from backend.api.serialization import serialize_delta
+        from backend.api.websocket import manager
+
+        creatures = self.game_state.creature_system.serialize_all()
+        changed_tiles = self.game_state.pop_changed_tiles()
+        delta = serialize_delta(
+            self.game_state.world,
+            changed_tiles,
+            creatures=creatures,
+        )
+        if delta:
+            await manager.broadcast(delta)

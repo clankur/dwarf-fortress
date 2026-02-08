@@ -35,13 +35,14 @@ class ConnectionManager:
         logger.info("Client connected (%d total)", len(self.active_connections))
 
         if self._game_state:
-            # Send world metadata snapshot
-            snapshot = serialize_world_snapshot(self._game_state.world)
+            # Send world metadata snapshot with creature data
+            creatures = self._game_state.creature_system.serialize_all()
+            snapshot = serialize_world_snapshot(self._game_state.world, creatures)
             await websocket.send_json(snapshot)
 
             # Send the surface z-level tiles
             from backend.config import SURFACE_Z
-            z_data = serialize_z_level_snapshot(self._game_state.world, SURFACE_Z + 1)
+            z_data = serialize_z_level_snapshot(self._game_state.world, SURFACE_Z)
             await websocket.send_json(z_data)
 
     def disconnect(self, websocket: WebSocket) -> None:
