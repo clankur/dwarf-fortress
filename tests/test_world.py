@@ -144,24 +144,23 @@ class TestWorldGen:
         assert world.depth == 32
 
     def test_surface_is_grass(self):
-        # Use smaller SURFACE_Z for test world with only 32 z-levels
         world = generate_world(width=32, height=32, depth=48, seed=42)
-        # Surface at SURFACE_Z should be grass
+        # Surface at SURFACE_Z should have grass floor
         grass_count = 0
         for y in range(world.height):
             for x in range(world.width):
-                if world.get_wall_type(x, y, SURFACE_Z) == TileType.GRASS:
+                if world.get_floor_type(x, y, SURFACE_Z) == TileType.GRASS:
                     grass_count += 1
         # Most surface tiles should be grass (some may be water)
         assert grass_count > world.width * world.height * 0.8
 
-    def test_sky_is_walkable(self):
+    def test_surface_is_walkable(self):
         world = generate_world(width=32, height=32, depth=48, seed=42)
-        # First air layer above surface should be walkable
+        # Surface z-level should be walkable
         walkable_count = 0
         for y in range(world.height):
             for x in range(world.width):
-                if world.is_walkable(x, y, SURFACE_Z + 1):
+                if world.is_walkable(x, y, SURFACE_Z):
                     walkable_count += 1
         assert walkable_count > 0
 
