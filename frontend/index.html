@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dwarf Fortress</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+        <div id="status-bar">
+            <span id="z-level">Z: 41</span>
+            <span id="fps">FPS: 0</span>
+            <span id="coords">0, 0</span>
+            <span id="connection-status">Connecting...</span>
+            <span id="pause-status"></span>
+        </div>
+        <div id="help-panel">
+            <h3>Controls</h3>
+            <p>Arrow keys / WASD: Scroll viewport</p>
+            <p>&lt; / &gt;: Change z-level</p>
+            <p>Space: Pause/Unpause</p>
+        </div>
+    </div>
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
