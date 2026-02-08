@@ -39,7 +39,10 @@ def serialize_z_level(world: WorldGrid, z: int) -> list[list[dict[str, int]]]:
     return level
 
 
-def serialize_world_snapshot(world: WorldGrid) -> dict[str, Any]:
+def serialize_world_snapshot(
+    world: WorldGrid,
+    creatures: list[dict[str, Any]] | None = None,
+) -> dict[str, Any]:
     """Serialize the full world state for initial WebSocket connection."""
     return {
         "type": "snapshot",
@@ -47,7 +50,7 @@ def serialize_world_snapshot(world: WorldGrid) -> dict[str, Any]:
         "height": world.height,
         "depth": world.depth,
         "surface_z": SURFACE_Z,
-        "creatures": [],
+        "creatures": creatures or [],
         "items": [],
     }
 

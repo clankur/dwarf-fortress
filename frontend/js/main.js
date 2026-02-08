@@ -6,7 +6,7 @@ import { Renderer } from "./renderer.js";
 import { InputHandler } from "./input.js";
 import { UI } from "./ui.js";
 
-const WS_URL = `ws://${window.location.hostname}:8000/ws`;
+const WS_URL = `ws://${window.location.host}/ws`;
 
 const state = new GameState();
 const canvas = document.getElementById("game-canvas");

@@ -70,7 +70,7 @@ class WorldGrid:
         return TileType(self.floor_types[z, y, x])
 
     def get_flags(self, x: int, y: int, z: int) -> TileFlag:
-        return TileFlag(self.flags[z, y, x])
+        return TileFlag(int(self.flags[z, y, x]))
 
     def set_wall_type(self, x: int, y: int, z: int, wall_type: TileType) -> None:
         self.wall_types[z, y, x] = wall_type.value

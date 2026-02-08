@@ -17,6 +17,20 @@ const WALL_DISPLAY = {
     9: { ch: "$", fg: "#ff0" },            // GOLD_ORE
 };
 
+// Floor material display (used when tile is open air + has floor)
+const FLOOR_DISPLAY = {
+    0: { ch: "·", fg: "#444" },           // AIR (unknown floor)
+    1: { ch: "·", fg: "#8B4513" },         // SOIL
+    2: { ch: "·", fg: "#888" },            // STONE
+    3: { ch: "·", fg: "#aaa" },            // GRANITE
+    4: { ch: "≈", fg: "#00f" },            // WATER
+    5: { ch: "≈", fg: "#f80" },            // MAGMA
+    6: { ch: ",", fg: "#0a0" },            // GRASS
+    7: { ch: "·", fg: "#b44" },            // IRON_ORE
+    8: { ch: "·", fg: "#c84" },            // COPPER_ORE
+    9: { ch: "·", fg: "#ff0" },            // GOLD_ORE
+};
+
 // Tile flags
 const FLAG_WALKABLE = 1;
 const FLAG_DIGGABLE = 2;
@@ -186,9 +200,11 @@ export class Renderer {
             ch = display.ch;
             fg = display.fg;
         } else if (flags & FLAG_HAS_FLOOR) {
-            // Open space with floor
-            ch = "·";
-            fg = "#444";
+            // Open space with floor - show floor material
+            const groundType = tile.f;
+            const floorDisplay = FLOOR_DISPLAY[groundType] || { ch: "·", fg: "#444" };
+            ch = floorDisplay.ch;
+            fg = floorDisplay.fg;
         } else {
             // Empty space (no floor, no wall)
             ch = " ";

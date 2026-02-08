@@ -38,31 +38,24 @@ def _generate_terrain(grid: WorldGrid) -> None:
 
     for z in range(grid.depth):
         if z > SURFACE_Z:
-            # Sky: air, walkable only if there's a floor from surface below
+            # Sky: empty air
             grid.wall_types[z, :, :] = TileType.AIR
-            if z == SURFACE_Z + 1:
-                # First air layer above surface has a floor (the grass)
-                grid.flags[z, :, :] = TileFlag.WALKABLE | TileFlag.HAS_FLOOR
-            else:
-                grid.flags[z, :, :] = TileFlag.NONE
+            grid.flags[z, :, :] = TileFlag.NONE
         elif z == SURFACE_Z:
-            # Surface: grass walls (ground level)
-            grid.wall_types[z, :, :] = TileType.GRASS
-            grid.floor_types[z, :, :] = TileType.SOIL
-            grid.flags[z, :, :] = TileFlag.DIGGABLE
+            # Surface: open air with grass floor, walkable
+            grid.wall_types[z, :, :] = TileType.AIR
+            grid.floor_types[z, :, :] = TileType.GRASS
+            grid.flags[z, :, :] = TileFlag.WALKABLE | TileFlag.HAS_FLOOR
         elif z > SURFACE_Z - soil_depth:
-            # Soil layers
+            # Soil layers (solid, diggable)
             grid.wall_types[z, :, :] = TileType.SOIL
             grid.floor_types[z, :, :] = TileType.SOIL
             grid.flags[z, :, :] = TileFlag.DIGGABLE
         else:
-            # Stone layers
+            # Stone layers (solid, diggable)
             grid.wall_types[z, :, :] = TileType.STONE
             grid.floor_types[z, :, :] = TileType.STONE
             grid.flags[z, :, :] = TileFlag.DIGGABLE
-
-    # The actual walkable surface is z = SURFACE_Z + 1 (first air layer)
-    # Dwarves walk on top of the grass
 
 
 def _generate_ores(grid: WorldGrid) -> None:
@@ -143,9 +136,5 @@ def _generate_water(grid: WorldGrid) -> None:
                 if not grid.in_bounds(x, y, z):
                     continue
                 grid.set_wall_type(x, y, z, TileType.WATER)
-                grid.set_flags(x, y, z, TileFlag.NONE)
-                # Surface above water is not walkable
-                above_z = z + 1
-                if grid.in_bounds(x, y, above_z):
-                    grid.remove_flag(x, y, above_z, TileFlag.WALKABLE)
-                    grid.remove_flag(x, y, above_z, TileFlag.HAS_FLOOR)
+                grid.set_floor_type(x, y, z, TileType.WATER)
+                grid.set_flags(x, y, z, TileFlag.HAS_FLOOR)
